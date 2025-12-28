@@ -263,6 +263,24 @@ body {
     aspect-ratio: 1/1;
     cursor: grab;
     transition: transform 0.1s;
+    
+    /* Оптимізація для мобільних */
+    touch-action: none;          /* Вимикає системний скрол при затисканні */
+    user-select: none;           /* Забороняє виділення "тексту" при перетягуванні */
+    -webkit-user-select: none;
+    -webkit-touch-callout: none; /* Вимикає контекстне меню на iOS */
+}
+/* Стан, коли ми тримаємо деталь пальцем/мишкою */
+.puzzle-piece:active {
+    cursor: grabbing;
+    transform: scale(1.05);      /* Легке збільшення для візуального відгуку */
+    z-index: 10;                 /* Щоб активна деталь була над іншими */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+/* Клас, який Sortable додає до елемента, що "летить" */
+.sortable-fallback {
+    opacity: 0.9 !important;
+    transform: scale(1.05) !important;
 }
 
 .puzzle-piece.locked {
@@ -393,4 +411,5 @@ input[type="range"] {
         width: 92vw;
         height: 92vw;
     }
+
 }
