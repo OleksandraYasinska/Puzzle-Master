@@ -9,7 +9,7 @@ const Main = {
     async init() {
         try {
             // 1. Завантажуємо дані рівнів
-            const response = await fetch('levels.json');
+            const response = await fetch('./levels.json');
             this.levels = await response.json();
             
             // 2. Ініціалізуємо навігацію та модулі
@@ -172,3 +172,4 @@ document.addEventListener('DOMContentLoaded', () => {
     Main.init();
 
 });
+
