@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Puzzle Master Pro - Грати Онлайн</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+
+    <audio id="bgMusic" loop src="assets/sounds/background.mp3"></audio>
+    <audio id="clickSound" src="assets/sounds/click.mp3"></audio>
+
+    <div id="app">
+        <section id="main-menu" class="screen">
+            <div class="menu-content">
+                <h1 class="game-logo">Puzzle Master</h1>
+                <nav class="menu-nav">
+                    <button id="btn-start" class="btn-main">Почати гру</button>
+                    <button id="btn-gallery" class="btn-main">Галерея рівнів</button>
+                    <button id="btn-upload-trigger" class="btn-main">Свій пазл <i class="fas fa-upload"></i></button>
+                    <button id="btn-settings" class="btn-main">Налаштування</button>
+                </nav>
+                <input type="file" id="user-image-input" accept="image/*" hidden>
+            </div> 
+        </section>
+        
+        <section id="gallery-screen" class="screen hidden">
+            <div class="gallery-header">
+                <button id="btn-gallery-back" class="btn-small"><i class="fas fa-arrow-left"></i> Назад</button>
+                <h2>Виберіть рівень</h2>
+            </div>
+            <div id="levels-grid" class="levels-container">
+                </div>
+        </section>
+
+        <section id="game-screen" class="screen hidden">
+            <header class="game-header">
+                <div class="stats">
+                    <span><i class="fas fa-clock"></i> <span id="timer">00:00</span></span>
+                    <span><i class="fas fa-redo"></i> <span id="moves">0</span></span>
+                </div>
+                <div class="game-controls">
+                    <button id="btn-pause" title="Пауза"><i class="fas fa-pause"></i></button>
+                    <button id="btn-hint" title="Підказка"><i class="fas fa-eye"></i></button>
+                    <button id="btn-mute" title="Звук"><i class="fas fa-volume-up"></i></button>
+                </div>
+            </header>
+
+            <main id="puzzle-container">
+                <div id="puzzle-board"></div>
+            </main>
+
+            <div id="hint-overlay" class="hidden">
+                <img id="hint-image" src="" alt="Hint">
+            </div>
+        </section>
+
+        <div id="pause-modal" class="modal hidden">
+            <div class="modal-content">
+                <h2>Пауза</h2>
+                <button id="btn-resume" class="btn-primary">Продовжити</button>
+                <button id="btn-to-menu" class="btn-secondary">В головне меню</button>
+            </div>
+        </div>
+
+        <div id="settings-modal" class="modal hidden">
+            <div class="modal-content">
+                <h2>Налаштування</h2>
+                <div class="setting-item">
+                    <label>Складність:</label>
+                    <select id="difficulty-select">
+                        <option value="3">Легко (3x3)</option>
+                        <option value="4" selected>Середньо (4x4)</option>
+                        <option value="5">Важко (5x5)</option>
+                        <option value="8">Експерт (8x8)</option>
+                    </select>
+                </div>
+                <div class="setting-item">
+                    <label>Гучність музики:</label>
+                    <input type="range" id="volume-slider" min="0" max="1" step="0.1" value="0.5">
+                </div>
+                <button id="btn-close-settings" class="btn-primary">Зберегти</button>
+            </div>
+        </div>
+
+        <div id="win-modal" class="modal hidden">
+            <div class="modal-content">
+                <i class="fas fa-trophy trophy-icon"></i>
+                <h2>Вітаємо!</h2>
+                
+                <div class="results-container">
+                    <div class="current-score">
+                        <p>Ваш результат:</p>
+                        <div class="score-grid">
+                            <span><i class="fas fa-clock"></i> <span id="final-time">00:00</span></span>
+                            <span><i class="fas fa-redo"></i> <span id="final-moves">0</span></span>
+                        </div>
+                    </div>
+        
+                    <div id="best-score-container" class="best-score">
+                        <p><i class="fas fa-star"></i> Найкращий результат:</p>
+                        <div class="score-grid">
+                            <span><i class="fas fa-clock"></i> <span id="best-time">--:--</span></span>
+                            <span><i class="fas fa-redo"></i> <span id="best-moves">-</span></span>
+                        </div>
+                    </div>
+                    <div id="new-record-badge" class="badge hidden">Новий рекорд!</div>
+                </div>
+        
+                <div class="modal-actions">
+                    <button id="btn-next-level" class="btn-primary">Наступний рівень</button>
+                    <button id="btn-win-to-menu" class="btn-secondary">В меню</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/settings.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

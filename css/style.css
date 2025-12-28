@@ -1,0 +1,396 @@
+/* ==========================================
+   ЗМІННІ ТА БАЗОВІ СТИЛІ
+   ========================================== */
+   :root {
+    --primary-color: #4a90e2;
+    --secondary-color: #6c5ce7;
+    --accent-color: #ff7675;
+    --success-color: #27ae60;
+    --bg-dark: #0f172a;
+    --text-light: #f8fafc;
+    --glass-bg: rgba(255, 255, 255, 0.08);
+    --glass-border: rgba(255, 255, 255, 0.15);
+    --transition-speed: 0.3s;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; 
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+    background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+    color: var(--text-light);
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+#app {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.hidden { display: none !important; }
+
+/* ==========================================
+   КНОПКИ
+   ========================================== */
+.btn-main, .btn-primary, .btn-secondary {
+    padding: 14px 28px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: white;
+    text-transform: uppercase;
+    font-weight: bold;
+    width: 100%;
+    max-width: 300px;
+    margin-bottom: 12px;
+    text-align: center;
+}
+
+.btn-main {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3);
+}
+
+.btn-primary { background: var(--success-color); }
+.btn-secondary { background: #475569; }
+
+.btn-main:hover, .btn-primary:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.1);
+}
+
+.btn-small {
+    padding: 10px 18px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    color: white;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+.btn-small:hover {
+    background: var(--primary-color);
+}
+
+/* ==========================================
+   ГОЛОВНЕ МЕНЮ
+   ========================================== */
+#main-menu {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    text-align: center;
+}
+
+.game-logo {
+    font-size: clamp(2.5rem, 10vw, 4rem);
+    margin-bottom: 40px;
+    background: linear-gradient(to right, #fff, var(--primary-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 900;
+}
+
+.menu-nav {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* ==========================================
+   ГАЛЕРЕЯ РІВНІВ
+   ========================================== */
+#gallery-screen {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    max-height: 100vh;
+}
+
+.gallery-header {
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background: rgba(0,0,0,0.2);
+}
+
+.levels-container {
+    display: grid;
+    /* minmax(160px, 1fr) гарантує, що картка не стане меншою за 160px */
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 20px;
+    padding: 20px;
+    /* Дозволяємо вертикальний скрол саме в цьому контейнері */
+    overflow-y: auto; 
+    flex: 1;
+    align-content: start;
+    
+    /* Додаємо плавний скрол для iOS та кращого вигляду */
+    -webkit-overflow-scrolling: touch;
+}
+.levels-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.levels-container::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.levels-container::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 10px;
+}
+
+.level-card {
+    min-height: 225px;
+    background: var(--glass-bg);
+    border-radius: 15px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+    border: 3px solid transparent;
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* Картки в одному ряду будуть однакової висоти */
+}
+
+.level-card:hover {
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.level-card.completed { border-color: var(--success-color); }
+
+.level-card img {
+    width: 100%;
+    height: 130px;
+    min-height: 130px;
+    object-fit: cover;
+    display: block;
+    flex-shrink: 0; 
+}
+
+.level-info {
+    padding: 12px;
+}
+.level-badge{
+    padding-left: 12px;
+}
+
+.level-title {
+    font-weight: bold;
+    font-size: 0.95rem;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.level-record {
+    display: flex;
+    gap: 10px;
+    font-size: 0.8rem;
+    color: var(--success-color);
+}
+
+/* ==========================================
+   ІГРОВИЙ ЕКРАН ТА ПАЗЛИ
+   ========================================== */
+#game-screen {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 10px;
+}
+
+.game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    padding: 12px 20px;
+    border-radius: 15px;
+    border: 1px solid var(--glass-border);
+    margin-bottom: 15px;
+}
+
+.stats { display: flex; gap: 20px; font-weight: bold; }
+
+.game-controls button {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--glass-border);
+    color: white;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-left: 5px;
+}
+
+#puzzle-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+}
+
+#puzzle-board {
+    display: grid; 
+    gap: 2px;
+    background: #000;
+    border: 4px solid var(--glass-border);
+    border-radius: 8px;
+    padding: 2px;
+    margin: 0 auto;
+    overflow: hidden; 
+}
+
+.puzzle-piece {
+    aspect-ratio: 1/1;
+    cursor: grab;
+    transition: transform 0.1s;
+}
+
+.puzzle-piece.locked {
+    cursor: default;
+    outline: 1px solid rgba(39, 174, 96, 0.4);
+    outline-offset: -2px;
+}
+
+.sortable-swap-highlight { background: rgba(74, 144, 226, 0.5) !important; }
+
+/* ==========================================
+   МОДАЛЬНІ ВІКНА ТА НАЛАШТУВАННЯ
+   ========================================== */
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    background: #1e293b;
+    padding: 30px;
+    border-radius: 20px;
+    text-align: center;
+    border: 1px solid var(--glass-border);
+    width: 90%;
+    max-width: 400px;
+}
+
+.modal h2 { margin-bottom: 20px; font-size: 1.8rem; }
+
+.setting-item {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.setting-item label {
+    display: block;
+    margin-bottom: 8px;
+    color: #94a3b8;
+}
+
+select {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    background: #0f172a;
+    color: white;
+    border: 1px solid var(--glass-border);
+    font-size: 1rem;
+    appearance: none; 
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 1em;
+}
+
+input[type="range"] {
+    width: 100%;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+/* ==========================================
+   РЕЗУЛЬТАТИ ПЕРЕМОГИ
+   ========================================== */
+.results-container {
+    background: rgba(0,0,0,0.2);
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.score-grid {
+    display: flex;
+    justify-content: space-around;
+    margin: 10px 0;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.badge {
+    background: var(--accent-color);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    display: inline-block;
+    margin-top: 5px;
+}
+
+/* ==========================================
+   ПІДКАЗКА (HINT)
+   ========================================== */
+#hint-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3000;
+    pointer-events: none;
+}
+
+#hint-image {
+    max-width: 85vw;
+    max-height: 85vh;
+    border: 4px solid white;
+    border-radius: 10px;
+    box-shadow: 0 0 40px rgba(0,0,0,0.5);
+    object-fit: contain;
+}
+
+/* ==========================================
+   АДАПТИВНІСТЬ
+   ========================================== */
+@media (max-width: 600px) {
+    .game-header { padding: 10px; font-size: 0.9rem; }
+    .stats { gap: 10px; }
+    .btn-main { padding: 12px; font-size: 0.9rem; }
+    
+    #puzzle-board {
+        width: 92vw;
+        height: 92vw;
+    }
+}
