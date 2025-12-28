@@ -135,7 +135,7 @@ const Settings = {
         }
     },
 
-    /*playMusic() {
+    playMusic() {
         const audio = document.getElementById('bgMusic');
         if (audio && !this.config.muted) {
             audio.play().catch(e => console.log("Браузер заблокував автозапуск:", e));
@@ -147,7 +147,7 @@ const Settings = {
         if (audio) {
             audio.pause();
         }
-    },*/
+    },
     
     playSound(soundId) {
         if (this.config.isMuted) return;
@@ -170,5 +170,6 @@ const Settings = {
     }
 
 };
+
 
 Settings.init();
