@@ -94,15 +94,26 @@ const Game = {
 
     initSortable() {
         if (this.sortable) this.sortable.destroy();
+        
         this.sortable = new Sortable(this.board, {
             swap: true, 
             swapClass: 'sortable-swap-highlight', 
-            animation: 200,
+            animation: 150,           // Швидша анімація робить гру "чутливішою"
             filter: '.locked', 
+            
+            // --- Мобільна оптимізація ---
+            forceFallback: true,      // Використовувати власну систему перетягування (швидше на мобільних)
+            fallbackTolerance: 3,     // Скільки пікселів пальцем треба пройти до початку руху (захист від випадкових кліків)
+            delay: 0,                 // Миттєвий старт перетягування
+            delayOnTouchOnly: false,
+            
             onMove: (evt) => !evt.related.classList.contains('locked'),
             onEnd: () => {
                 this.moves++;
-                Settings.playSound('clickSound'); 
+                // Перевіряємо наявність функції перед викликом
+                if (typeof Settings.playSound === 'function') {
+                    Settings.playSound('clickSound'); 
+                }
                 this.updateStats();
                 this.checkLockedPieces();
                 this.checkWin();
@@ -214,5 +225,6 @@ const Game = {
         Settings.manageMusic('play');
     }
 };
+
 
 Game.init();
