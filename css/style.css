@@ -249,26 +249,52 @@ body {
 }
 
 #puzzle-board {
-    display: grid; 
-    gap: 2px;
-    background: #000;
-    border: 4px solid var(--glass-border);
-    border-radius: 8px;
-    padding: 2px;
+    width: 90vw;
+    height: 90vw;
+    /* Гарантуємо, що дошка не буде більшою за вільне місце по висоті */
+    max-width: calc(100vh - 250px); 
+    max-height: calc(100vh - 250px);
     margin: 0 auto;
-    overflow: hidden; 
 }
 
 .puzzle-piece {
     aspect-ratio: 1/1;
     cursor: grab;
-    transition: transform 0.1s;
     
-    /* Оптимізація для мобільних */
-    touch-action: none;          /* Вимикає системний скрол при затисканні */
-    user-select: none;           /* Забороняє виділення "тексту" при перетягуванні */
+    /* Оптимізація */
+    touch-action: none;
+    user-select: none;
     -webkit-user-select: none;
-    -webkit-touch-callout: none; /* Вимикає контекстне меню на iOS */
+    -webkit-touch-callout: none;
+    
+    /* Додаємо плавний колір при ховері, але НЕ трансформацію */
+    transition: filter 0.2s, outline 0.2s;
+}
+/* Ефект наведення тільки для ПК */
+@media (hover: hover) {
+    .puzzle-piece:hover:not(.locked) {
+        filter: brightness(1.1) contrast(1.1);
+        z-index: 5;
+    }
+}
+/* Елемент, який ми ЗАРАЗ тягнемо (його візуальна копія) */
+.sortable-drag {
+    opacity: 1 !important;
+    transform: scale(1.08); /* Деталь "піднімається" над дошкою */
+    z-index: 1000 !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    cursor: grabbing;
+}
+/* Місце, звідки ми взяли деталь (пуста клітинка) */
+.sortable-ghost {
+    opacity: 0.3;
+    filter: grayscale(1) brightness(0.5);
+}
+/* Підсвітка цілі, куди ми хочемо покласти деталь */
+.sortable-swap-highlight {
+    background: rgba(74, 144, 226, 0.4) !important;
+    outline: 3px solid var(--primary-color) !important;
+    outline-offset: -3px;
 }
 /* Стан, коли ми тримаємо деталь пальцем/мишкою */
 .puzzle-piece:active {
@@ -285,11 +311,10 @@ body {
 
 .puzzle-piece.locked {
     cursor: default;
-    outline: 1px solid rgba(39, 174, 96, 0.4);
+    filter: saturate(0.8) brightness(0.9);
+    outline: 2px solid rgba(39, 174, 96, 0.6);
     outline-offset: -2px;
 }
-
-.sortable-swap-highlight { background: rgba(74, 144, 226, 0.5) !important; }
 
 /* ==========================================
    МОДАЛЬНІ ВІКНА ТА НАЛАШТУВАННЯ
@@ -413,3 +438,4 @@ input[type="range"] {
     }
 
 }
+
