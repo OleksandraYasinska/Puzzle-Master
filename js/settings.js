@@ -135,6 +135,17 @@ const Settings = {
         }
     },
 
+    
+    
+    playSound(soundId) {
+        if (this.config.isMuted) return;
+        const sound = document.getElementById(soundId);
+        if (sound) {
+            sound.currentTime = 0;
+            sound.play().catch(() => {});
+        }
+    },
+    
     playMusic() {
         const audio = document.getElementById('bgMusic');
         if (audio && !this.config.muted) {
@@ -146,15 +157,6 @@ const Settings = {
         const audio = document.getElementById('bgMusic');
         if (audio) {
             audio.pause();
-        }
-    },
-    
-    playSound(soundId) {
-        if (this.config.isMuted) return;
-        const sound = document.getElementById(soundId);
-        if (sound) {
-            sound.currentTime = 0;
-            sound.play().catch(() => {});
         }
     },
     
@@ -173,3 +175,4 @@ const Settings = {
 
 
 Settings.init();
+
