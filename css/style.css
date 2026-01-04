@@ -1,7 +1,7 @@
 /* ==========================================
    ЗМІННІ ТА БАЗОВІ СТИЛІ
    ========================================== */
-   :root {
+:root {
     --primary-color: #4a90e2;
     --secondary-color: #6c5ce7;
     --accent-color: #ff7675;
@@ -118,7 +118,6 @@ body {
     display: flex;
     flex-direction: column;
     height: 100%;
-    max-height: 100vh;
 }
 
 .gallery-header {
@@ -131,18 +130,17 @@ body {
 
 .levels-container {
     display: grid;
-    /* minmax(160px, 1fr) гарантує, що картка не стане меншою за 160px */
     grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
     gap: 20px;
     padding: 20px;
-    /* Дозволяємо вертикальний скрол саме в цьому контейнері */
     overflow-y: auto; 
     flex: 1;
     align-content: start;
-    
-    /* Додаємо плавний скрол для iOS та кращого вигляду */
     -webkit-overflow-scrolling: touch;
+    padding-bottom: 40px;
+    scrollbar-gutter: stable;
 }
+
 .levels-container::-webkit-scrollbar {
     width: 6px;
 }
@@ -162,11 +160,10 @@ body {
     border-radius: 15px;
     overflow: hidden;
     cursor: pointer;
-    transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+    transition: transform 0.3s, background 0.3s;
     border: 3px solid transparent;
     display: flex;
     flex-direction: column;
-    height: 100%; /* Картки в одному ряду будуть однакової висоти */
 }
 
 .level-card:hover {
@@ -179,18 +176,11 @@ body {
 .level-card img {
     width: 100%;
     height: 130px;
-    min-height: 130px;
     object-fit: cover;
     display: block;
-    flex-shrink: 0; 
 }
 
-.level-info {
-    padding: 12px;
-}
-.level-badge{
-    padding-left: 12px;
-}
+.level-info { padding: 12px; }
 
 .level-title {
     font-weight: bold;
@@ -207,7 +197,7 @@ body {
 }
 
 /* ==========================================
-   ІГРОВИЙ ЕКРАН ТА ПАЗЛИ
+   ІГРОВИЙ ЕКРАН
    ========================================== */
 #game-screen {
     display: flex;
@@ -238,7 +228,10 @@ body {
     border-radius: 8px;
     cursor: pointer;
     margin-left: 5px;
+    transition: background 0.2s;
 }
+
+.game-controls button:hover { background: var(--primary-color); }
 
 #puzzle-container {
     flex: 1;
@@ -249,75 +242,72 @@ body {
 }
 
 #puzzle-board {
-    width: 90vw;
-    height: 90vw;
-    /* Гарантуємо, що дошка не буде більшою за вільне місце по висоті */
-    max-width: calc(100vh - 250px); 
-    max-height: calc(100vh - 250px);
+    display: grid; 
+    gap: 2px;
+    background: #000;
+    border: 4px solid var(--glass-border);
+    border-radius: 8px;
+    padding: 2px;
     margin: 0 auto;
+    overflow: hidden; 
 }
 
+/* ==========================================
+   ОПТИМІЗОВАНІ ПАЗЛИ (МЕХАНІКА)
+   ========================================== */
 .puzzle-piece {
     aspect-ratio: 1/1;
     cursor: grab;
     
-    /* Оптимізація */
+    /* Оптимізація для уникнення лагів */
     touch-action: none;
     user-select: none;
     -webkit-user-select: none;
     -webkit-touch-callout: none;
     
-    /* Додаємо плавний колір при ховері, але НЕ трансформацію */
+    /* Плавний ховер, але БЕЗ анімації transform (щоб не залипало при перетягуванні) */
     transition: filter 0.2s, outline 0.2s;
 }
-/* Ефект наведення тільки для ПК */
+
+/* Ефект наведення (ПК) */
 @media (hover: hover) {
     .puzzle-piece:hover:not(.locked) {
         filter: brightness(1.1) contrast(1.1);
         z-index: 5;
     }
 }
-/* Елемент, який ми ЗАРАЗ тягнемо (його візуальна копія) */
+
+/* Клас, коли ми реально тягнемо деталь */
 .sortable-drag {
     opacity: 1 !important;
-    transform: scale(1.08); /* Деталь "піднімається" над дошкою */
+    transform: scale(1.08); /* Візуально піднімаємо деталь */
     z-index: 1000 !important;
     box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     cursor: grabbing;
 }
-/* Місце, звідки ми взяли деталь (пуста клітинка) */
+
+/* Порожня клітинка, звідки взяли пазл */
 .sortable-ghost {
-    opacity: 0.3;
-    filter: grayscale(1) brightness(0.5);
+    opacity: 0.2;
+    filter: grayscale(1) brightness(0.4);
 }
-/* Підсвітка цілі, куди ми хочемо покласти деталь */
+
+/* Підказка місця куди ставимо */
 .sortable-swap-highlight {
     background: rgba(74, 144, 226, 0.4) !important;
     outline: 3px solid var(--primary-color) !important;
     outline-offset: -3px;
 }
-/* Стан, коли ми тримаємо деталь пальцем/мишкою */
-.puzzle-piece:active {
-    cursor: grabbing;
-    transform: scale(1.05);      /* Легке збільшення для візуального відгуку */
-    z-index: 10;                 /* Щоб активна деталь була над іншими */
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-}
-/* Клас, який Sortable додає до елемента, що "летить" */
-.sortable-fallback {
-    opacity: 0.9 !important;
-    transform: scale(1.05) !important;
-}
 
 .puzzle-piece.locked {
     cursor: default;
-    filter: saturate(0.8) brightness(0.9);
-    outline: 2px solid rgba(39, 174, 96, 0.6);
+    filter: saturate(0.8) brightness(0.8);
+    outline: 2px solid rgba(39, 174, 96, 0.5);
     outline-offset: -2px;
 }
 
 /* ==========================================
-   МОДАЛЬНІ ВІКНА ТА НАЛАШТУВАННЯ
+   МОДАЛЬНІ ВІКНА
    ========================================== */
 .modal {
     position: fixed;
@@ -375,7 +365,7 @@ input[type="range"] {
 }
 
 /* ==========================================
-   РЕЗУЛЬТАТИ ПЕРЕМОГИ
+   РЕЗУЛЬТАТИ ТА ПЕРЕМОГА
    ========================================== */
 .results-container {
     background: rgba(0,0,0,0.2);
@@ -433,9 +423,11 @@ input[type="range"] {
     .btn-main { padding: 12px; font-size: 0.9rem; }
     
     #puzzle-board {
-        width: 92vw;
-        height: 92vw;
+        width: 88vw;
+        height: 88vw;
+        /* Важливо для телефонів: щоб дошка не вилазила за екран вертикально */
+        max-width: calc(100vh - 250px); 
+        max-height: calc(100vh - 250px);
+        margin: 0 auto;
     }
-
 }
-
